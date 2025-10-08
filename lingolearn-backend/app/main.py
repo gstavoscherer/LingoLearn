@@ -6,6 +6,7 @@ from routers import auth, users, texts
 from starlette.staticfiles import StaticFiles
 from database.connection import engine, Base
 from core.exceptions import *
+import os
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -26,8 +27,14 @@ async def app_exception_handler(request: Request, exc: AppError):
             }
         }
     )
-app.mount("/uploads/text_covers", StaticFiles(directory="uploads/text_covers"), name="uploads")
+# Caminho do diretório de uploads
+UPLOAD_DIR = "uploads/text_covers"
 
+# 🔧 Fallback: cria o diretório se não existir
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+# Monta o diretório estático
+app.mount("/uploads/text_covers", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,

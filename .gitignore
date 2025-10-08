@@ -27,7 +27,7 @@ Thumbs.db
 .env
 !.env.example  # Exceção (não ignora)
 !/frontend/.env.test     # Exceção (não ignora)
-
+*.pyc
 # ======== TOOLS/CACHE ======== #
 # Vite (Frontend)
 vite.config.*.timestamp-*

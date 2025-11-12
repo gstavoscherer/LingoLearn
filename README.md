@@ -34,7 +34,7 @@ O LingoLearn é uma plataforma moderna que facilita o aprendizado de novos idiom
 ### 1. Clone o Repositório
 
 ```bash
-git clone <url-do-repositorio>
+git clone https://github.com/gstavoscherer/LingoLearn
 cd LingoLearn
 ```
 

@@ -18,7 +18,7 @@ export const actions: Actions = {
 
 		try {
 			const body = new URLSearchParams({ username: email, password });
-			console.log(API_URL)
+
 			const res = await fetch(`${API_URL}/auth/`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },

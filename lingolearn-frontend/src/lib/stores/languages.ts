@@ -23,7 +23,7 @@ function createLanguagesStore() {
             update(state => ({ ...state, loading: true, error: null }));
             
             try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/languages`);
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/languages/`);
                 
                 if (!response.ok) throw new Error('Failed to fetch languages');
                 

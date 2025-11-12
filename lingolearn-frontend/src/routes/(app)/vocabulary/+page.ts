@@ -27,7 +27,7 @@ export const load = (async ({ parent, fetch, url }) => {
 		queryParams.set('query', query);
 	}
 
-	const languagesRequest = await fetch(`${import.meta.env.VITE_API_URL}/languages`);
+	const languagesRequest = await fetch(`${import.meta.env.VITE_API_URL}/languages/`);
 	const languages: LanguageType[] = await languagesRequest.json();
 	const languageOptions = languages.map((language) => {
 		return { value: language.id.toString(), label: `${language.name} (${language.code})` };

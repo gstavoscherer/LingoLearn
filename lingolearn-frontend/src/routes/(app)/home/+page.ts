@@ -11,7 +11,7 @@ export const load = (async ({ parent, fetch }) => {
 		order_by: 'descending'
 	});
 
-	const textsRes = await fetch(`${import.meta.env.VITE_API_URL}/texts?${textsQuery}`);
+	const textsRes = await fetch(`${import.meta.env.VITE_API_URL}/texts/?${textsQuery}`);
 	const textsData = await textsRes.json();
 
 	// Buscar dados do dashboard com token no header

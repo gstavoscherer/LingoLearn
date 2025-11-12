@@ -49,7 +49,7 @@
 
 	onMount(async () => {
 		// Carrega a lista de Idiomas
-		const languagesRequest = await fetch(`${import.meta.env.VITE_API_URL}/languages`);
+		const languagesRequest = await fetch(`${import.meta.env.VITE_API_URL}/languages/`);
 		const languages: LanguageType[] = await languagesRequest.json();
 		languageOptions = languages.map((language) => {
 			return { value: language.id.toString(), label: `${language.name} (${language.code})` };

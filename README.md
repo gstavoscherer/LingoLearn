@@ -77,7 +77,7 @@ DATABASE_URL=sqlite:///./app/lingolearn.db
 JWT_KEY=sua_chave_secreta_aqui_minimo_32_caracteres
 JWT_ALGORITHM=HS256
 API_PORT=5000
-ACCESS_TOKEN_EXPIRE_MINUTES=30
+ACCESS_TOKEN_EXPIRE_MINUTES=1440
 ```
 
 **⚠️ IMPORTANTE:** Gere uma chave JWT segura:
@@ -90,7 +90,7 @@ python -c "import secrets; print(secrets.token_urlsafe(32))"
 
 ```bash
 cd app
-python database/create_db.py
+python -m app.database.create_db
 cd ..
 ```
 
@@ -98,7 +98,7 @@ cd ..
 
 ```bash
 cd app
-python main.py
+python -m app.main
 ```
 
 O backend estará rodando em `http://localhost:5000`
@@ -115,20 +115,12 @@ cd lingolearn-frontend
 
 ### 2. Instale as dependências
 
-Escolha seu gerenciador de pacotes preferido:
+Rode o seguinte comando npm:
 
 ```bash
 # npm
 npm install
 
-# yarn
-yarn install
-
-# pnpm
-pnpm install
-
-# bun
-bun install
 ```
 
 ### 3. Configure as variáveis de ambiente
@@ -137,7 +129,7 @@ Crie um arquivo `.env` na pasta `lingolearn-frontend` baseado no `.env.example`:
 
 ```env
 VITE_API_URL=http://localhost:5000
-VITE_ACCESS_TOKEN_EXPIRE=60
+VITE_ACCESS_TOKEN_EXPIRE=86400
 ```
 
 ### 4. Inicie o servidor de desenvolvimento
@@ -146,14 +138,6 @@ VITE_ACCESS_TOKEN_EXPIRE=60
 # npm
 npm run dev
 
-# yarn
-yarn dev
-
-# pnpm
-pnpm dev
-
-# bun
-bun dev
 ```
 
 O frontend estará rodando em `http://localhost:5173`
@@ -164,14 +148,6 @@ O frontend estará rodando em `http://localhost:5173`
 # npm
 npm run build
 
-# yarn
-yarn build
-
-# pnpm
-pnpm build
-
-# bun
-bun run build
 ```
 
 ---

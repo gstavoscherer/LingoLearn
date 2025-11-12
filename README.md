@@ -1,4 +1,4 @@
-# LingoLearn 📚
+F# LingoLearn 📚
 
 Aplicação completa para aprendizado de idiomas através da leitura de textos, com sistema de gerenciamento de vocabulário e acompanhamento de progresso.
 
@@ -230,32 +230,6 @@ LingoLearn/
 
 ---
 
-## 🔌 API Endpoints
-
-### Autenticação (`/auth`)
-
-| Método | Endpoint | Descrição | Autenticação |
-|--------|----------|-----------|--------------|
-| `POST` | `/auth/` | Login (retorna token JWT) | Não |
-| `GET` | `/auth/` | Validar token | Sim |
-
-### Usuários (`/users`)
-
-| Método | Endpoint | Descrição | Autenticação |
-|--------|----------|-----------|--------------|
-| `POST` | `/users/` | Registrar novo usuário | Não |
-| `PUT` | `/users/{id}` | Atualizar usuário | Sim |
-
-### Textos (`/texts`)
-
-| Método | Endpoint | Descrição | Autenticação |
-|--------|----------|-----------|--------------|
-| `POST` | `/texts/` | Importar novo texto | Sim |
-| `GET` | `/texts/` | Listar textos do usuário | Sim |
-| `GET` | `/texts/{id}/pages/{page}` | Obter página específica | Sim |
-
----
-
 ## 🛠️ Tecnologias Utilizadas
 
 ### Backend
@@ -277,134 +251,9 @@ LingoLearn/
 
 ---
 
-## 📝 Exemplos de Uso
-
-### 1. Registrar um usuário
-
-```bash
-curl -X POST http://localhost:5000/users/ \
-  -H "Content-Type: application/json" \
-  -d '{
-    "username": "João Silva",
-    "email": "joao@email.com",
-    "password": "senha123"
-  }'
-```
-
-### 2. Fazer login
-
-```bash
-curl -X POST http://localhost:5000/auth/ \
-  -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "username=joao@email.com&password=senha123"
-```
-
-### 3. Importar um texto
-
-```bash
-curl -X POST http://localhost:5000/texts/ \
-  -H "Authorization: Bearer SEU_TOKEN_AQUI" \
-  -F "title=Meu Primeiro Texto" \
-  -F "author=Autor Exemplo" \
-  -F "language=pt" \
-  -F "content=Conteúdo do texto aqui..." \
-  -F "user_id=1" \
-  -F "image=@caminho/para/imagem.jpg"
-```
-
----
-
-## 🔒 Segurança
-
-- ✅ Senhas hasheadas com bcrypt
-- ✅ Autenticação via JWT com expiração configurável
-- ✅ CORS configurado para frontend local
-- ✅ Validação de dados com Pydantic
-- ✅ Cookies HTTP-only para tokens
-- ✅ Proteção de rotas no frontend e backend
-
----
-
-## 🐛 Troubleshooting
-
-### Backend
-
-**Erro: "Could not validate credentials"**
-- Verifique se o token JWT está válido e não expirou
-- Confirme se a chave JWT no `.env` está correta
-
-**Erro: "Database is locked"**
-- Certifique-se de que apenas uma instância do servidor está rodando
-- Reinicie o servidor
-
-**Erro ao importar textos**
-- Verifique se a pasta `uploads/text_covers` existe
-- Confirme se o usuário tem permissões de escrita
-
-### Frontend
-
-**Erro: "Failed to fetch"**
-- Verifique se o backend está rodando em `http://localhost:5000`
-- Confirme se `VITE_API_URL` está configurado corretamente no `.env`
-
-**Erro de CORS**
-- Verifique as configurações de CORS no backend
-- Certifique-se de que o frontend está rodando na porta esperada
-
-**Página em branco após build**
-- Execute `npm run preview` para testar o build
-- Verifique o console do navegador para erros
-
----
-
-## 🎯 Roadmap
-
-- [ ] Sistema de flashcards
-- [ ] Estatísticas detalhadas de progresso
-- [ ] Modo escuro
-- [ ] Exportação de vocabulário
-- [ ] Suporte para áudio/pronúncia
-- [ ] Aplicativo mobile
-- [ ] Integração com dicionários externos
-
----
-
 ## 📄 Licença
 
 Este projeto é de código aberto e está disponível para uso educacional.
-
----
-
-## 👥 Contribuindo
-
-Contribuições são bem-vindas! Para contribuir:
-
-1. Faça um fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/MinhaFeature`)
-3. Commit suas mudanças (`git commit -m 'Adiciona MinhaFeature'`)
-4. Push para a branch (`git push origin feature/MinhaFeature`)
-5. Abra um Pull Request
-
-### Convenções de Código
-
-**Backend:**
-- Siga PEP 8
-- Use type hints
-- Documente funções complexas
-
-**Frontend:**
-- Siga o ESLint configurado
-- Use Prettier para formatação
-- Componentes em PascalCase
-
----
-
-## 📞 Suporte
-
-Se encontrar problemas ou tiver dúvidas:
-
-- Abra uma [issue](../../issues)
-- Entre em contato através do email do projeto
 
 ---
 

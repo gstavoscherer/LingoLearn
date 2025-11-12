@@ -2,25 +2,39 @@
     --primary-blue: #3b82f6;
     --primary-blue-hover: #2563eb;
     --primary-blue-light: #dbeafe;
+    --primary-blue-lightest: #eff5ff;
+
     --background-light: #f8fafc;
     --background-white: #ffffff;
     --background-gray: #f1f5f9;
+    
     --text-primary: #1e293b;
     --text-secondary: #64748b;
+    
     --error-red: #ef4444;
+    --error-red-hover: #dc2626;
     --error-red-light: rgba(239, 68, 68, 0.1);
+    
+    --success-green: #16a34a;
+    --success-green-hover: #15803d;
+    
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    
     --border-light: #e2e8f0;
     --border: hsl(240 5.9% 90%);
     --border-focus: #ccc;
     --ring: hsl(240 10% 3.9%);
-	--toast-success: #16a34a;
-	--toast-success-bg: #ecfdf5;
-	--toast-info: #3b82f6;        
-	--toast-info-bg: #dbeafe;   
-	--toast-warning: #f59e0b;
-	--toast-warning-bg: #fffbeb;
-	--toast-error: #ef4444;
-	--toast-error-bg: #fee2e2;
+    
+    --toast-success: #16a34a;
+    --toast-success-bg: #ecfdf5;
+    --toast-info: #3b82f6;        
+    --toast-info-bg: #dbeafe;   
+    --toast-warning: #f59e0b;
+    --toast-warning-bg: #fffbeb;
+    --toast-error: #ef4444;
+    --toast-error-bg: #fee2e2;
 }
 
 * {

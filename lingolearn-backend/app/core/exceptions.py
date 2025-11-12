@@ -4,6 +4,9 @@ class AppError(Exception):
         self.message = message
         self.headers = headers
 
+class ResourceNotFoundException(AppError):
+    def __init__(self, message="Esse recurso não foi encontrado", headers = None):
+        super().__init__(message, headers, status_code=404,)
 
 class UserNotFoundError(AppError):
     def __init__(self, user_id=None):
@@ -12,8 +15,8 @@ class UserNotFoundError(AppError):
 
 
 class UserAlreadyExistsError(AppError):
-    def __init__(self, email):
-        message = f'Usuário com email: {email} já existe'
+    def __init__(self):
+        message = "Já existe um usuário cadastrado com este e-mail."
         super().__init__(status_code=400, message=message)
 
 

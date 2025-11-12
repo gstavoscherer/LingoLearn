@@ -7,6 +7,13 @@ declare global {
 		// interface PageData {}
 		// interface PageState {}
 		// interface Platform {}
+
+		interface Locals {
+			flash?: {
+				type: 'success' | 'error' | 'warning' | 'info';
+				message: string;
+			};
+		}
 	}
 }
 

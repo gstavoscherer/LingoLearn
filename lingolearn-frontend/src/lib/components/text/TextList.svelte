@@ -1,29 +1,23 @@
 <script lang="ts">
-	import { TextCard } from "../ui";
-	import type { TextType } from "$lib/types";
-    
-    interface BookListProps {
-        texts: TextType[]
-    }
-    let { texts }: BookListProps = $props();
-    let t = $state();
-    function handleOnDetail(textId: number) {
-        t = textId
-    }
+	import { TextCard } from '../ui';
+	import type { TextType } from '$lib/types';
+
+	interface TextListProps {
+		texts: TextType[];
+		onDetail: (text: TextType) => void;
+	}
+	let { texts, onDetail }: TextListProps = $props();
 
 </script>
-{#each texts as text}
-    <div class="wrapper">
-        <TextCard
-            {text}
-            onDetail={handleOnDetail}
-        />
-    </div>
+
+{#each texts as text (text.id)}
+	<div class="wrapper">
+		<TextCard {text} {onDetail} />
+	</div>
 {/each}
 
-
 <style>
-    .wrapper {
-        margin-top: 1rem;
-    }
+	.wrapper {
+		margin-top: 1rem;
+	}
 </style>

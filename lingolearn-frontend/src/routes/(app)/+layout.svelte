@@ -1,63 +1,74 @@
 <!-- src/routes/+layout.svelte -->
 <script>
-	import {SidebarMenu} from '$lib/components/layout';
-    let { children } = $props();
-    import Topbar from "$lib/components/layout/Topbar/Topbar.svelte";
-    import Sidebar from "$lib/components/layout/Sidebar/SidebarMenu.svelte";
-	import { page } from "$app/state";
-      let sidebarOpen = $state(true);
+	let { children } = $props();
+	import Topbar from '$lib/components/layout/Topbar/Topbar.svelte';
+	import { SidebarMenu } from '$lib/components/layout/';
+	import { onMount } from 'svelte';
+	import { languagesStore } from '$lib/stores/languages';
+	let sidebarOpen = $state(true);
+
+	onMount(async () => {
+		if ($languagesStore.languages.length === 0 && !$languagesStore.loading) {
+			await languagesStore.load();
+		}
+	});
 </script>
 
 <div class="layout">
-    <!-- Topbar -->
-    <header class="topbar">
-        <Topbar onToggleSidebar={() => (sidebarOpen = !sidebarOpen)} />
-    </header>
+	<div class="topbar">
+		<Topbar onToggleSidebar={() => (sidebarOpen = !sidebarOpen)} />
+	</div>
 
-    <div class="body">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <Sidebar />
-        </aside>
+	<div class="main-content">
+		{#if sidebarOpen}
+			<div class="sidebar">
+				<SidebarMenu />
+			</div>
+		{/if}
 
-        <!-- Conteúdo principal -->
-        <main class="main">
-            {@render children()}
-        </main>
-    </div>
+		<div class="page-content">
+			{@render children()}
+		</div>
+	</div>
 </div>
 
 <style>
-.layout {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-}
+	.layout {
+		display: flex;
+		flex-direction: column;
+		height: 100vh;
+		min-width: 0;
+	}
 
-.topbar {
-    height: 56px;
-    flex-shrink: 0;
-    background: #fff;
-    border-bottom: 1px solid #ddd;
-}
+	.topbar {
+		flex-shrink: 0;
+		width: 100%;
+	}
 
-.body {
-    flex: 1;
-    display: flex;
-    overflow: hidden;
-}
+	.main-content {
+		display: flex;
+		flex: 1;
+		min-height: 0;
+		min-width: 0;
+		overflow: hidden;
+	}
 
-.sidebar {
-    width: 240px;
-    background: #fafafa;
-    border-right: 1px solid #ddd;
-    overflow-y: auto;
-}
+	.sidebar {
+		flex-shrink: 0;
+		background: var(--background-light);
+		height: 100%;
+		overflow-y: auto;
+	}
 
-.main {
-    flex: 1;
-    padding: 1rem;
-    background: #f9f9f9;
-    overflow-y: auto;
-}
+	.page-content {
+		flex: 1;
+		min-width: 0;
+		overflow: auto;
+		padding: 1rem;
+		background: var(--background-light);
+	}
+
+	.sidebar {
+		transition: all 0.3s ease;
+	}
 </style>

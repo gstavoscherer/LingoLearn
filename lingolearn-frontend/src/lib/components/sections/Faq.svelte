@@ -16,36 +16,31 @@
         <div class="faqItem">
           <h3 class="faqQuestion">Quais idiomas são suportados?</h3>
           <p class="faqAnswer">
-            Suportamos mais de 50 idiomas, incluindo inglês, espanhol, francês, alemão, italiano, português,
-            japonês, chinês, coreano e muitos outros.
+            Atualmente, a plataforma oferece suporte a dois idiomas, permitindo que os usuários aprendam e pratiquem tanto inglês quanto espanhol de maneira integrada e eficiente.
           </p>
         </div>
         <div class="faqItem">
-          <h3 class="faqQuestion">É gratuito?</h3>
+          <h3 class="faqQuestion">Como começar a usar o LingoLearn?</h3>
           <p class="faqAnswer">
-            Sim! Oferecemos um plano gratuito robusto que permite importar até 10 textos por mês. Também temos
-            planos premium com recursos avançados.
+            Crie sua conta, escolha o idioma que deseja aprender (inglês ou espanhol) e importe os textos que quiser. Depois, clique nas palavras que não conhece e pratique com nossos quizzes.
           </p>
         </div>
         <div class="faqItem">
-          <h3 class="faqQuestion">Funciona offline?</h3>
+          <h3 class="faqQuestion">É possível acompanhar meu progresso?</h3>
           <p class="faqAnswer">
-            Os textos já importados e palavras salvas ficam disponíveis offline. Para importar novos textos e
-            sincronizar progresso, é necessária conexão com internet.
+            Sim. O LingoLearn registra seu avanço por texto e por palavra, permitindo que você veja claramente o que já aprendeu e o que precisa reforçar.
           </p>
         </div>
         <div class="faqItem">
           <h3 class="faqQuestion">Como o sistema de repetição espaçada funciona?</h3>
           <p class="faqAnswer">
-            Baseado em algoritmos científicos, o sistema programa revisões das palavras nos momentos ideais para
-            maximizar a retenção na memória de longo prazo.
+            Baseado em algoritmos científicos, o sistema programa revisões das palavras nos momentos ideais para maximizar a retenção na memória de longo prazo.
           </p>
         </div>
         <div class="faqItem">
-          <h3 class="faqQuestion">Posso usar meus próprios textos?</h3>
+          <h3 class="faqQuestion">O LingoLearn oferece ajuda com pronúncia?</h3>
           <p class="faqAnswer">
-            Absolutamente! Você pode importar qualquer texto: artigos, livros, letras de música, notícias. O
-            aprendizado é mais eficaz com conteúdo que te interessa.
+            Sim. Você pode ouvir a pronúncia de palavras e frases diretamente na plataforma, o que ajuda na memorização e na prática da fala.
           </p>
         </div>
       </div>
@@ -54,7 +49,7 @@
 
 <style>
     .faq {
-        padding: 4rem 2rem;
+        padding: 2rem 2rem;
         background: var(--background-white);
     }
 
@@ -91,12 +86,14 @@
 
     .faqQuestion {
         font-size: 1.25rem;
+        text-align: center;
         font-weight: 600;
         margin-bottom: 1rem;
         color: var(--text-primary);
     }
 
     .faqAnswer {
+      text-align: center;
         color: var(--text-secondary);
         line-height: 1.6;
     }

@@ -6,3 +6,4 @@ python-jose[cryptography]
 pydantic-settings
 python-multipart
 pydantic[email]
+googletrans

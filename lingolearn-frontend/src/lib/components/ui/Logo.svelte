@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { BookOpen } from "@lucide/svelte";
 
     type Size = 'small' | 'medium';
 
@@ -11,11 +10,11 @@
     let iconSize: number = $derived.by(() => {
         switch (size) {
             case 'small':
-                return 24;
+                return 32;
             case 'medium':
-                return 28;
+                return 48;
             default:
-                return 28;
+                return 48;
         }
     });
 
@@ -26,7 +25,7 @@
     class:small={ size === 'small'}
     class:medium={ size === 'medium'}
 >
-    <BookOpen size={iconSize}/>
+    <img src="/logo.png" alt="" style="width: {iconSize}px; height: {iconSize}px;">
     <span>LingoLearn</span>
 </div>
 
@@ -37,6 +36,7 @@
         gap: 0.5rem;
         font-weight: 700;
         color: var(--primary-blue);
+        user-select: none;
     }
 
     .small {

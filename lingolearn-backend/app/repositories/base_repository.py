@@ -1,5 +1,5 @@
 from typing import Generic, TypeVar, Any, Optional, List
-from sqlalchemy import select, update, delete
+from sqlalchemy import select, update, delete, text
 from sqlalchemy.orm import Session, joinedload
 
 ModelType = TypeVar('ModelType')
@@ -31,8 +31,8 @@ class BaseRepository(Generic[ModelType]):
         stmt = select(self.model).offset(skip).limit(limit)
         if filters:
             stmt = stmt.filter_by(**filters)
-        if order_by:
-            stmt = stmt.order_by(order_by)
+        if order_by is not None:
+            stmt = stmt.order_by(text(order_by))
         return list(self.db.scalars(stmt).all())
 
     def create(self, **data: Any) -> ModelType:

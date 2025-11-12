@@ -1,7 +1,20 @@
-from .base_model import Base
-from .user import User
-from .text import Text
-from .text_word import TextWord
-from .user_word import UserWord
-from .page import Page
-__all__ = ["Base", "User", "Text", "TextWord", "UserWord", "Page"]
+from app.models.base_model import Base, BaseModel
+from app.models.user import User
+from app.models.language import Language
+from app.models.word import Word
+from app.models.user_word import UserWord
+from app.models.text import Text
+from app.models.text_word import TextWord
+from app.models.page import Page
+
+__all__ = [
+    "Base",
+    "BaseModel",
+    "User",
+    "Language",
+    "Word",
+    "UserWord",
+    "Text",
+    "TextWord",
+    "Page",
+]

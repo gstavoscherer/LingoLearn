@@ -1,29 +1,28 @@
 <script lang="ts">
-	import type { WordType } from '$lib/types';
+	import type { UserWordType } from '$lib/types';
 	
     interface WordProps {
-        word: WordType
-        onClick: (id?: number) => void
+        userWord: UserWordType
+        onClick: (userWord: UserWordType) => void
     }    
 
-	let {word, onClick}: WordProps = $props();
-
+	let {userWord, onClick}: WordProps = $props();
 </script>
 
 <div
 	class="word"
-	class:word-unknown={word.status === 'unknown'}
-	class:word-recognize={word.status === 'recognize'}
-	class:word-familiar={word.status === 'familiar'}
-	class:word-well-know={word.status === 'well-know'}
-	class:word-know={word.status === 'know'}
+	class:word-unknown={userWord.word.status === 'unknown'}
+	class:word-recognize={userWord.word.status === 'recognize'}
+	class:word-familiar={userWord.word.status === 'familiar'}
+	class:word-well-know={userWord.word.status === 'well-known'}
+	class:word-know={userWord.word.status === 'known'}
     role="button"
     tabindex="0"
-    onkeydown={(e) => { if (e.key === 'Esq') onClick(word?.id); }}
-	onclick={() => onClick(word?.id)}
-	title={word.translation || word.original}
+    onkeydown={(e) => { if (e.key === 'Esq') onClick(userWord); }}
+	onclick={() => onClick(userWord)}
+	title={userWord.word.word}
 >
-	{word.original}
+	{userWord.word.word}
 </div>
 
 <style>

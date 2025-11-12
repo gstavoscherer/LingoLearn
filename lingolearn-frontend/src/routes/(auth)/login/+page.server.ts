@@ -1,51 +1,53 @@
 import { fail, redirect, error, type Actions } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
+import { API_URL } from '$lib/config/api';
+
+export const load: PageServerLoad = async ({ cookies }) => {
+	cookies.delete('token', {path: '/'});
+};
 
 export const actions: Actions = {
-  login: async ({ request, cookies }) => {
-    const form = await request.formData();
-    const email = form.get('email')?.toString().trim();
-    const password = form.get('password')?.toString().trim();
+	login: async ({ request, cookies }) => {
+		const form = await request.formData();
+		const email = form.get('email')?.toString().trim();
+		const password = form.get('password')?.toString().trim();
 
-    if (!email || !password) {
-      return fail(400, { error: 'Todos os campos são obrigatórios.', success: false });
-    }
+		if (!email || !password) {
+			return fail(400, { error: 'Todos os campos são obrigatórios.', success: false });
+		}
 
-    try {
-      const body = new URLSearchParams({ username: email, password });
+		try {
+			const body = new URLSearchParams({ username: email, password });
+			console.log(API_URL)
+			const res = await fetch(`${API_URL}/auth/`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				body: body.toString()
+			});
 
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: body.toString()
-      });
+			const result = await res.json();
 
-      const result = await res.json();
+			if (!res.ok) {
+				const errorMessage =
+					result?.detail?.error?.message ||
+					result?.detail?.message ||
+					'Erro desconhecido';
 
-      if (!res.ok) {
-        const errorMessage =
-          result?.detail?.error?.message ||
-          result?.detail?.message ||
-          'Erro desconhecido';
+				return fail(res.status, { error: errorMessage, success: false });
+			}
 
-        if (res.status >= 400 && res.status < 500) {
-          return fail(res.status, { error: 'Login inválido', success: false });
-        }
-        throw error(res.status, errorMessage);
-      }
+			cookies.set('token', result.access_token, {
+				path: '/',
+				httpOnly: true,
+				sameSite: 'lax',
+				secure: import.meta.env.PROD === true,
+				maxAge: Number(import.meta.env.VITE_ACCESS_TOKEN_EXPIRE)
+			});
+		} catch (err) {
+			console.error('Erro ao autenticar:', err);
+			throw error(500, 'Erro ao processar a solicitação.');
+		}
 
-      cookies.set('token', result.access_token, {
-        path: '/',
-        httpOnly: true,
-        sameSite: 'lax',
-        secure: import.meta.env.PROD === true,
-        maxAge: Number(import.meta.env.VITE_ACCESS_TOKEN_EXPIRE)
-      });
-
-    } catch (err) {
-      console.error('Erro ao autenticar:', err);
-      throw error(500, 'Erro ao processar a solicitação.');
-    }
-    
-    throw redirect(303, '/home');
-  }
+		throw redirect(303, '/home');
+	}
 };

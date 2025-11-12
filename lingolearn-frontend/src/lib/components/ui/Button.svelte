@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from "svelte";
 
-    type Variant = 'primary' | 'secondary' | 'outline' | 'ghost';
+    type Variant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'red';
     type Size = 'small' | 'medium' | 'large' | 'fullWidth';
 
     interface ButtonProps {
@@ -25,6 +25,7 @@
     class:secondary={variant === 'secondary'}
     class:outline={variant === 'outline'}
     class:ghost={variant === 'ghost'}
+    class:red={variant === 'red'}
     class:small={size === 'small'}
     class:medium={size === 'medium'}
     class:large={size === 'large'}
@@ -47,6 +48,8 @@
         border: none;
         outline: none;
         font-family: inherit;
+        width: fit-content;
+        white-space: nowrap;
     }
 
     button:disabled {
@@ -64,6 +67,16 @@
         transform: translateY(-1px);
     }
 
+    .secondary {
+        background: var(--background-white);
+        color: var(--primary-blue);
+        border: 1px solid var(--primary-blue);
+    }
+    .secondary:hover:not(:disabled) {
+        background: var(--primary-blue-light);
+        transform: translateY(-1px);
+    }
+
     .outline {
         background: transparent;
         color: var(--primary-blue);
@@ -78,7 +91,16 @@
         color: var(--primary-blue);
     }
     .ghost:hover:not(:disabled) {
-        background: rgba(0, 0, 0, 0.05); /* leve destaque */
+        background: var(--background-gray);
+    }
+
+    .red {
+        background: var(--error-red);
+        color: white;
+    }
+    .red:hover:not(:disabled) {
+        background: var(--error-red-hover);
+        transform: translateY(-1px);
     }
 
     /* Sizes */

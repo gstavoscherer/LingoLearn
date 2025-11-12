@@ -1,71 +1,114 @@
 <script lang="ts">
-  import { enhance } from '$app/forms';
+	import { enhance } from '$app/forms';
 	import { page } from '$app/state';
 	import { getToastState } from '$lib/toast-state.svelte.js';
-  let { form } = $props();
-  let loading = $state(false);
+	import { Eye, EyeOff } from '@lucide/svelte';
 
-  const toastState = getToastState();
+	let showPassword = $state(false);
+	let loading = $state(false);
 
-  if (page.url.searchParams.get('registered')) {
-    toastState.add(
-      "Conta criada!",
-      "Seu cadastro foi realizado com sucesso. Bem-vindo(a) à plataforma!",
-      "success"
-    );
-  }
-
+	const toastState = getToastState();
 </script>
 
-<div class="auth-container">
-  <div class="auth-card">
-    <div class="auth-header">
-      <h1>Bem-vindo de volta</h1>
-      <p>Por favor, insira suas credenciais para acessar sua conta</p>
-    </div>
-    
-    <form 
-      method="POST"
-      action="?/login"
-      use:enhance={() => {
-        loading = true;
+<div class="container">
+	<div class="card">
+		<div class="header">
+			<h1>Bem-vindo de volta</h1>
+			<p>Por favor, insira suas credenciais para acessar sua conta</p>
+		</div>
 
-        return async ({ update }) => {
-          await update();
-          loading = false;
-        };
-      }}
-      class="auth-form"
-      onsubmit={() => loading = true}
-    >
-      {#if form && form.success === false}
-        <div class="error-message">
-          {form?.error ?? 'Erro ao fazer login. Verifique suas credenciais.'}
-        </div>
-      {/if}
+		<form
+			method="POST"
+			action="?/login"
+			use:enhance={() => {
+				loading = true;
 
-      <div class="input-group">
-        <label for="email">Email</label>
-        <input id="email" name="email" type="email" required placeholder="seu@email.com" />
-      </div>
-      
-      <div class="input-group">
-        <label for="password">Senha</label>
-        <input id="password" name="password" type="password" required placeholder="••••••••" />
-        <a href="/" class="forgot-password">Esqueceu sua senha?</a>
-      </div>
-      
-      <button type="submit" class="auth-button" disabled={loading}>
-        {#if loading}
-          Entrando...
-        {:else}
-          Entrar
-        {/if}
-      </button>
-    </form>
-    
-    <div class="signup-section">
-      <p>Não tem uma conta? <a href="/register" class="signup-link">Crie uma conta</a></p>
-    </div>
-  </div>
+				return async ({ update }) => {
+					await update();
+					loading = false;
+
+					// Caso sucesso no form retorna mais cedo
+					if (page.status == 303 || page.status == 200) {
+						return;
+					}
+
+					// Caso erro no form adiciona toast de erro
+					if (!page.form?.success) {
+						toastState.add('Login inválido', 'Usuário ou senha incorretos', 'error');
+					}
+				};
+			}}
+			class="form"
+			onsubmit={() => (loading = true)}
+		>
+			<div class="input-group">
+				<label for="email">Email</label>
+				<input id="email" name="email" type="email" required placeholder="seu@email.com" />
+			</div>
+
+			<div class="input-group">
+				<label for="password">Senha</label>
+				<div class="password-input-wrapper">
+					<input
+						id="password"
+						name="password"
+						type={showPassword ? 'text' : 'password'}
+						required
+						placeholder="sua senha"
+					/>
+					<button
+						type="button"
+						class="password-toggle"
+						onclick={() => (showPassword = !showPassword)}
+					>
+						{#if showPassword}
+							<Eye size={22} />
+						{:else}
+							<EyeOff size={22} />
+						{/if}
+					</button>
+				</div>
+				<a href="/forgot-password" class="forgot-password">Esqueceu sua senha?</a>
+			</div>
+
+			<button type="submit" class="button" disabled={loading}>
+				{#if loading}
+					Entrando...
+				{:else}
+					Entrar
+				{/if}
+			</button>
+		</form>
+
+		<div class="signup-section">
+			<p>Não tem uma conta? <a href="/register" class="signup-link">Crie uma conta</a></p>
+		</div>
+	</div>
 </div>
+
+<style>
+	.password-input-wrapper {
+		position: relative;
+	}
+
+	.password-input-wrapper input {
+		width: 100%;
+		padding-right: 2.5rem;
+	}
+
+	.password-toggle {
+		position: absolute;
+		right: 0.75rem;
+		top: 50%;
+		transform: translateY(-50%);
+		background: none;
+		border: none;
+		color: var(--text-primary);
+		cursor: pointer;
+		padding: 0.25rem;
+		border-radius: 4px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+</style>

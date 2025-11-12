@@ -23,8 +23,8 @@
 	</div>
 
 	<div class="progress-container">
-		<span class="page">Página {text.lastPage} de {text.totalPages}</span>
-		<Progress current={text.lastPage} total={text.totalPages} />
+		<span class="page">Página {text.lastVisitedPage} de {text.totalPages}</span>
+		<Progress current={text.lastVisitedPage} total={text.totalPages} />
 	</div>
 </div>
 

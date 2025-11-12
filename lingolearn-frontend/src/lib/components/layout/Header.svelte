@@ -5,9 +5,9 @@
 </script>
 
 <header>
-	<Logo />
+	<a href="/"><Logo /></a>
 	<nav>
-		<a class="navLink" href="#faq">FAQ</a>
+		<a class="navLink" href="/faq">FAQ</a>
 		<Button variant="outline" onclick={() => goto('/login')}>Login</Button>
 	</nav>
 </header>

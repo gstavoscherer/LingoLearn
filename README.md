@@ -78,6 +78,11 @@ JWT_KEY=sua_chave_secreta_aqui_minimo_32_caracteres
 JWT_ALGORITHM=HS256
 API_PORT=5000
 ACCESS_TOKEN_EXPIRE_MINUTES=1440
+FRONTEND_URL=https://lingolearn.gustavoscherer.com
+SMTP_SERVER=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=
+SMTP_PASSWORD=
 ```
 
 **⚠️ IMPORTANTE:** Gere uma chave JWT segura:

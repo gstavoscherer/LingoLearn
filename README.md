@@ -94,7 +94,6 @@ python -c "import secrets; print(secrets.token_urlsafe(32))"
 ### 5. Crie o banco de dados
 
 ```bash
-cd app
 python -m app.database.create_db
 cd ..
 ```
@@ -102,7 +101,6 @@ cd ..
 ### 6. Inicie o servidor backend
 
 ```bash
-cd app
 python -m app.main
 ```
 

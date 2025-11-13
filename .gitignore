@@ -31,3 +31,6 @@ Thumbs.db
 # ======== TOOLS/CACHE ======== #
 # Vite (Frontend)
 vite.config.*.timestamp-*
+
+uploads/text_covers/*
+!uploads/text_covers/.gitkeep

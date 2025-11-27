@@ -7,7 +7,8 @@ class DashboardResponse(BaseModel):
     user_known_words_last_week: int
     streak: int
     last_login: Optional[str] = None
-    study_time_today: int  # ou float, dependendo do tipo retornado
+    study_time_today: int
+    words_to_review: int
 
     class Config:
         from_attributes = True

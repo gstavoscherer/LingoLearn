@@ -8,37 +8,18 @@ class UserRepository(BaseRepository[User]):
     def __init__(self, db: Session):
         super().__init__(User, db)
     def get_user_streak(self, user_id: int) -> dict:
-        """
-        Retorna o streak e o último login do usuário.
-
-        Args:
-            user_id (int): ID do usuário.
-
-        Returns:
-            dict: {"streak": int, "last_login": datetime | None}
-        """
         stmt = select(User.streak, User.last_login).where(User.id == user_id)
         result = self.db.execute(stmt).first()
 
         if not result:
-            print(f"⚠️ [STREAK] Usuário {user_id} não encontrado.")
             return {"streak": 0, "last_login": None}
 
         streak, last_login = result
         streak = streak or 0
 
-        print(f"🔥 [STREAK] user_id={user_id}, streak={streak}, last_login={last_login}")
         return {"streak": streak, "last_login": last_login}
 
     def add_study_time(self, user_id: int, seconds: int):
-        """
-        Adiciona tempo ao atributo study_time_in_seconds do usuário.
-        Reseta o tempo se for um novo dia, ou soma ao tempo existente se for o mesmo dia.
-
-        Args:
-            user_id (int): ID do usuário.
-            seconds (int): Tempo em segundos a ser adicionado.
-        """
         user = self.db.query(User).filter(User.id == user_id).first()
 
         if not user:
@@ -63,15 +44,6 @@ class UserRepository(BaseRepository[User]):
         self.db.commit()
 
     def get_user_study_time_today(self, user_id: int) -> int:
-        """
-        Retorna o tempo de estudo do usuário no dia atual.
-
-        Args:
-            user_id (int): ID do usuário.
-
-        Returns:
-            int: Tempo de estudo em segundos no dia atual.
-        """
         user = self.db.query(User).filter(User.id == user_id).first()
 
         if not user:

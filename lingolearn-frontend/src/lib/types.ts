@@ -128,4 +128,14 @@ export interface DashboardData {
 	streak: number;
 	lastLogin: string | null;
 	studyTimeToday: number;
+	wordsToReview: number;
 }
+
+export interface QuizQuestionType {
+  question: string;
+  options: WordType[];
+  correctAnswerId: number;
+  quality: number;
+}
+
+export type QuizResponse = QuizQuestionType[];

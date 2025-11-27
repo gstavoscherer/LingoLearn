@@ -4,7 +4,7 @@ import type { PageLoad } from './$types';
 export const load = (async ({ parent, fetch }) => {
 	const { user, token } = await parent();
 	
-	// Buscar textos
+	// Get texts
 	const textsQuery = new URLSearchParams({
 		user_id: user.id.toString(),
 		top: '3',
@@ -14,7 +14,7 @@ export const load = (async ({ parent, fetch }) => {
 	const textsRes = await fetch(`${import.meta.env.VITE_API_URL}/texts/?${textsQuery}`);
 	const textsData = await textsRes.json();
 
-	// Buscar dados do dashboard com token no header
+	// Get Dashboard data
 	const dashboardRes = await fetch(`${import.meta.env.VITE_API_URL}/dashboard`, {
 		headers: {
 			'Authorization': `Bearer ${token}`
@@ -27,7 +27,7 @@ export const load = (async ({ parent, fetch }) => {
 	
 	const dashboardDataRaw = await dashboardRes.json();
 
-	// Processar textos
+	// Process texts
 	const texts: PaginatedList<TextType> = {
 		currentPage: 0,
 		perPage: 0,
@@ -58,13 +58,13 @@ export const load = (async ({ parent, fetch }) => {
 		}
 	}
 
-	// Converter dashboard data de snake_case para camelCase
 	const dashboardData: DashboardData = {
 		userKnownWords: dashboardDataRaw.user_known_words,
 		userKnownWordsLastWeek: dashboardDataRaw.user_known_words_last_week,
 		streak: dashboardDataRaw.streak,
 		lastLogin: dashboardDataRaw.last_login,
-		studyTimeToday: dashboardDataRaw.study_time_today
+		studyTimeToday: dashboardDataRaw.study_time_today,
+		wordsToReview: dashboardDataRaw.words_to_review
 	};
 
 	return { texts, dashboardData };

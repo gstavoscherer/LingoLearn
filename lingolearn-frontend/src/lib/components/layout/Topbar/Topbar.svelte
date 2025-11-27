@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { Search } from '$lib/components/ui';
-	import Button from '$lib/components/ui/Button.svelte';
 	import Logo from '$lib/components/ui/Logo.svelte';
-	import { Menu, Settings } from '@lucide/svelte';
+	import { Menu } from '@lucide/svelte';
 	import { goto } from '$app/navigation';
 	import { searchActions } from '$lib/stores/search';
 

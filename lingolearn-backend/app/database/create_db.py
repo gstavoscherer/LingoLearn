@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.models import Base
-from app.models.language import Language # Importe o modelo Language
+from app.models.language import Language
 
 # Criar engine e tabelas
 engine = create_engine(settings.DATABASE_URL, connect_args={"check_same_thread": False})

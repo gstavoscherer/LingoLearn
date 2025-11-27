@@ -15,7 +15,6 @@ from app.core.exceptions import ResourceNotFoundException
 
 
 def import_text(db: Session, text_data: TextImport, image: Optional[UploadFile]) -> TextResponse:
-    # Repositórios
     user_word_repo = UserWordRepository(db)
     text_repo = TextRepository(db)
     page_repo = PageRepository(db)
@@ -23,20 +22,46 @@ def import_text(db: Session, text_data: TextImport, image: Optional[UploadFile])
     text_word_repo = TextWordRepository(db)
 
     try:
+        print("=== DEBUG IMPORT_TEXT ===")
+        print(f"📝 Iniciando importação do texto: {text_data.title}")
+        print(f"👤 User ID: {text_data.user_id}")
+        print(f"🌐 Language ID: {text_data.language_id}")
+        print(f"📄 Tamanho do conteúdo: {len(text_data.content)} caracteres")
+        print(f"🖼️ Imagem fornecida: {image is not None}")
+
         # 1. Calcular palavras conhecidas
+        print("\n🔍 Buscando palavras conhecidas do usuário...")
         user_known_words = user_word_repo.get_user_words_by_language(
             user_id=text_data.user_id,
             language_id=text_data.language_id
         )
+        print(f"✅ Palavras conhecidas encontradas: {len(user_known_words)}")
+
+        print("\n📖 Parseando texto em palavras...")
         parsed_words = parse_text_into_words(text_data.content)
         words_from_text = {word for word, count in parsed_words}
+        print(f"📊 Palavras únicas no texto: {len(words_from_text)}")
+        print(f"📈 Total de ocorrências: {sum(count for word, count in parsed_words)}")
+        
+        # Mostrar algumas palavras do texto
+        sample_words = list(words_from_text)[:10]
+        print(f"🔤 Amostra de palavras: {sample_words}")
+
         known_words_set = {user_word.word.word for user_word in user_known_words}
+        print(f"📚 Palavras conhecidas do usuário: {len(known_words_set)}")
+        
         known_words_in_text = words_from_text.intersection(known_words_set)
         total_known_words = len(known_words_in_text)
+        print(f"🎯 Palavras conhecidas NO TEXTO: {total_known_words}")
+        print(f"📊 Porcentagem conhecida: {(total_known_words/len(words_from_text))*100:.1f}%")
 
+        print("\n📄 Dividindo texto em páginas...")
         pages = parse_text_into_pages(text=text_data.content, words_per_page=300)
+        print(f"📖 Total de páginas: {len(pages)}")
+        print(f"📝 Caracteres por página: {[len(page) for page in pages[:3]]}...")
 
         # 2. Criar texto
+        print("\n💾 Criando registro do texto...")
         text_to_create = {
             "user_id": text_data.user_id,
             "title": text_data.title,
@@ -46,55 +71,76 @@ def import_text(db: Session, text_data: TextImport, image: Optional[UploadFile])
             "total_known_words": total_known_words,
             "total_pages": len(pages)
         }
+        print(f"📋 Dados do texto: {text_to_create}")
+        
         new_text = text_repo.create(**text_to_create)
         db.flush()
+        print(f"✅ Texto criado com ID: {new_text.id}")
 
         # 3. Salvar imagem se existir
         if image:
+            print(f"\n🖼️ Salvando imagem...")
             saved_path = save_upload_file(
                 upload=image,
                 base_dir="uploads/text_covers",
                 basename=f"text_{new_text.id}_cover",
             )
             text_repo.update(new_text, image_path=saved_path)
+            print(f"✅ Imagem salva em: {saved_path}")
 
         # 4. Criar páginas
+        print(f"\n📄 Criando {len(pages)} páginas...")
         for i, page in enumerate(pages, start=1):
             page_repo.create(text_id=new_text.id, number=i, content=page)
+        print("✅ Páginas criadas com sucesso")
 
-        # 5. Processar palavras - OTIMIZADO
+        # 5. Processar palavras
+        print(f"\n🔤 Processando {len(parsed_words)} palavras...")
         words_to_process = [(word_str, count) for word_str, count in parsed_words]
+        print(f"📊 Palavras únicas para processar: {len(words_to_process)}")
 
         # Buscar todas as palavras existentes de uma vez
+        print("🔍 Buscando palavras existentes no banco...")
+        word_strings = [word for word, count in words_to_process]
         existing_words = word_repo.get_words_by_list(
-            [word for word, count in words_to_process],
+            word_strings,
             text_data.language_id
         )
+        print(f"✅ Palavras existentes encontradas: {len(existing_words)}")
 
         # Criar dicionário para acesso rápido
         existing_words_dict = {word.word: word for word in existing_words}
+        print(f"📚 Dicionário de palavras existentes criado")
 
         # Identificar palavras que precisam ser criadas
         words_to_create = [
             word for word, count in words_to_process
             if word not in existing_words_dict
         ]
+        print(f"🆕 Novas palavras a criar: {len(words_to_create)}")
+        if words_to_create:
+            print(f"📝 Amostra de novas palavras: {words_to_create[:10]}")
 
         # Criar todas as palavras novas de uma vez (INSERT BATCH)
         if words_to_create:
+            print("💾 Criando palavras novas em lote...")
             new_words = word_repo.bulk_create(
                 words_to_create,
                 text_data.language_id
             )
+            print(f"✅ {len(new_words)} novas palavras criadas")
             # Atualizar o dicionário com as novas palavras
             for word in new_words:
                 existing_words_dict[word.word] = word
 
         # Criar todos os TextWords de uma vez (INSERT BATCH)
+        print("\n🔗 Criando relações Text-Word...")
         aggregated = defaultdict(int)
         for word, count in words_to_process:
             aggregated[word] += count
 
+        print(f"📊 Agregado de palavras: {len(aggregated)} entradas únicas")
+        
         # Cria apenas um registro por word_id
         text_words_data = [
             {
@@ -103,17 +149,31 @@ def import_text(db: Session, text_data: TextImport, image: Optional[UploadFile])
                 'quantity': aggregated[word]
             }
             for word in aggregated
-]
+        ]
 
+        print(f"💾 Salvando {len(text_words_data)} relações Text-Word...")
         text_word_repo.bulk_create(text_words_data)
+        print("✅ Relações Text-Word criadas com sucesso")
 
         db.commit()
         db.refresh(new_text)
+        print("\n🎉 Importação concluída com sucesso!")
+        print(f"📊 Resumo final:")
+        print(f"   - Texto ID: {new_text.id}")
+        print(f"   - Total palavras: {new_text.total_words}")
+        print(f"   - Palavras conhecidas: {new_text.total_known_words}")
+        print(f"   - Páginas: {new_text.total_pages}")
 
         # 6. Retornar resposta
         return TextResponse.model_validate(new_text)
-    except:
+        
+    except Exception as e:
+        print(f"\n❌ ERRO na importação: {str(e)}")
+        print(f"🔍 Tipo do erro: {type(e).__name__}")
+        import traceback
+        print(f"📋 Stack trace: {traceback.format_exc()}")
         db.rollback()
+        print("🔄 Rollback executado")
         raise
 
 def get_text_by_id(db: Session, text_id: int) -> TextResponse:

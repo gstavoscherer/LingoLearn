@@ -1,4 +1,4 @@
-import { fail, redirect, error, type Actions } from '@sveltejs/kit';
+import { fail, redirect, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { API_URL } from '$lib/config/api';
 
@@ -45,7 +45,7 @@ export const actions: Actions = {
 			});
 		} catch (err) {
 			console.error('Erro ao autenticar:', err);
-			throw error(500, 'Erro ao processar a solicitação.');
+			return fail(500, { error: 'Erro ao processar a solicitação.' });
 		}
 
 		throw redirect(303, '/home');

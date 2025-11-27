@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 
+from app.models.word import Word
 from app.repositories.word import WordRepository
 from app.schemas.word import WordCreate, WordUpdate, WordResponse
 
@@ -42,5 +43,4 @@ def get_word(db: Session, word_id: int = None, word: str = None, language_id = N
         word = word_repo.get(word_id)
     else:
         word = word_repo.get_by(word=word, language_id=language_id)
-
     return WordResponse.model_validate(word)

@@ -203,3 +203,23 @@ export function formatStudyTime(seconds: number): string {
 
 	return `${hours}h ${minutes.toString().padStart(2, '0')}min`;
 }
+
+export function snakeToCamel<T>(obj: any): T {
+  if (obj === null || typeof obj !== 'object') {
+    return obj;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map(item => snakeToCamel(item)) as T;
+  }
+
+  const result: any = {};
+  for (const key in obj) {
+    // Correção: usar Object.prototype.hasOwnProperty.call
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      const camelKey = key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+      result[camelKey] = snakeToCamel(obj[key]);
+    }
+  }
+  return result;
+}

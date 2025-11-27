@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import or_
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 from datetime import datetime, timedelta
 from app.models import UserWord, Word
 from app.repositories.base_repository import BaseRepository
@@ -17,6 +17,7 @@ class UserWordRepository(BaseRepository[UserWord]):
             self.model.word_id == word_id
         )
         return self.db.scalars(stmt).first()
+
     def create(self, **kwargs):
         user_id = kwargs.get("user_id")
         word_id = kwargs.get("word_id")
@@ -34,6 +35,76 @@ class UserWordRepository(BaseRepository[UserWord]):
         self.db.commit()
         self.db.refresh(obj)
         return obj
+
+    def update_user_word(
+        self, 
+        user_id: int, 
+        word_id: int, 
+        **kwargs
+    ) -> Optional[UserWord]:
+        """
+        Atualiza uma UserWord específica, modificando apenas os campos passados.
+        
+        Args:
+            user_id: ID do usuário
+            word_id: ID da palavra
+            **kwargs: Campos para atualizar (apenas os campos passados serão modificados)
+            
+        Returns:
+            UserWord atualizada ou None se não encontrada
+        """
+        user_word = self.get_by_user_and_word(user_id, word_id)
+        
+        if not user_word:
+            return None
+        
+        # Atualiza apenas os campos que foram passados
+        for key, value in kwargs.items():
+            if hasattr(user_word, key):
+                setattr(user_word, key, value)
+        
+        self.db.commit()
+        self.db.refresh(user_word)
+        return user_word
+
+    # Método alternativo mais explícito
+    def update_user_word_explicit(
+        self, 
+        user_id: int, 
+        word_id: int, 
+        easiness_factor: Optional[float] = None,
+        translation: Optional[str] = None,
+        context: Optional[str] = None,
+        context_translation: Optional[str] = None,
+        last_review: Optional[datetime] = None,
+        next_review: Optional[datetime] = None
+    ) -> Optional[UserWord]:
+        """
+        Versão explícita do update que aceita apenas os campos específicos da UserWord.
+        """
+        user_word = self.get_by_user_and_word(user_id, word_id)
+        
+        if not user_word:
+            return None
+        
+        # Atualiza apenas os campos que não são None
+        update_fields = {
+            'easiness_factor': easiness_factor,
+            'translation': translation,
+            'context': context,
+            'context_translation': context_translation,
+            'last_review': last_review,
+            'next_review': next_review
+        }
+        
+        for field, value in update_fields.items():
+            if value is not None:
+                setattr(user_word, field, value)
+        
+        self.db.commit()
+        self.db.refresh(user_word)
+        return user_word
+
     def get_user_words_by_language(
         self, 
         user_id: int, 
@@ -210,8 +281,30 @@ class UserWordRepository(BaseRepository[UserWord]):
             learning=learning,
             new=new
         )
-
-
-
-
     
+    def get_user_words_to_review(self, user_id: int, top: int = 5):
+        now = datetime.now()
+
+        stmt = (
+            select(self.model)
+            .where(
+                self.model.user_id == user_id,
+                or_(
+                    self.model.next_review == None,         
+                    self.model.next_review <= now          
+                )
+            )
+            .order_by(
+                self.model.last_review.is_(None).desc(),   
+                self.model.last_review.desc()            
+            )
+            .limit(top)
+        )
+
+        return self.db.execute(stmt).scalars().all()
+    
+    def get_all_user_words(self, user_id:int):
+        stmt = select(self.model).where(
+            self.model.user_id == user_id
+        ) 
+        return self.db.execute(stmt).scalars(stmt).all()

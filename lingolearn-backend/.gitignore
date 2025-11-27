@@ -1,4 +1,7 @@
+uploads/text_covers/*
+!uploads/text_covers/.gitkeep
 /app/lingolearn.db
+/app/*.db
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -10,7 +13,6 @@ __pycache__/
 # C extensions
 *.so
 *.db
-uploads/
 # Distribution / packaging
 .Python
 build/

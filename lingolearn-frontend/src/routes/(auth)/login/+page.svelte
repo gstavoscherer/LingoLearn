@@ -34,7 +34,19 @@
 
 					// Caso erro no form adiciona toast de erro
 					if (!page.form?.success) {
-						toastState.add('Login inválido', 'Usuário ou senha incorretos', 'error');
+						if (page.status == 403) {
+							toastState.add(
+								'Login inválido',
+								'Usuário ou senha incorretos',
+								'error'
+							);
+						} else {
+							toastState.add(
+								'Login inválido',
+								'Erro ao processar a solicitação.',
+								'error'
+							);
+						}
 					}
 				};
 			}}

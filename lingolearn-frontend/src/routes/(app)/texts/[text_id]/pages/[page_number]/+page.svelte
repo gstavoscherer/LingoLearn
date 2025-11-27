@@ -11,8 +11,6 @@
 
 	const toastState = getToastState();
 
-	let startTime = $state(0);
-
 	let textPage: TextPageType = $derived(page.data.data.textPage);
 	let userWords: UserWordType[] = $derived.by(() =>
 		page.data?.data?.userWords?.map((word: UserWordType) => {
@@ -49,7 +47,7 @@
 	let currentUserWord: UserWordType | undefined = $state();
 
 	onMount(() => {
-		startTime = Date.now();
+		const startTime = Date.now();
 
 		return () => {
 			const endTime = Date.now();

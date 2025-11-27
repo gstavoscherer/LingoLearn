@@ -50,7 +50,7 @@ export const load = (async ({ parent, fetch, url }) => {
 
 	const response = await userWordsRequest.json();
 
-	// Mapear a resposta para o formato do frontend
+	// Mapping
 	const userWords: UserWordType[] = response.pagination.items.map((item: UserWordResponse) => ({
 		userId: item.user_id,
 		easinessFactor: item.easiness_factor,

@@ -1,10 +1,10 @@
 from typing import Optional
 
-from fastapi import APIRouter, Depends, UploadFile, File
+from fastapi import APIRouter, Depends, UploadFile
+from fastapi import Request, HTTPException
 from sqlalchemy.orm import Session
 
 from app.core.security import get_current_user_id
-
 from app.services.user import update_user_last_visited_text
 from app.services.text import import_text, get_text_list, get_text_by_id, update_text, delete_text, text_page, update_last_page
 from app.schemas.text import TextImport, TextResponse, TextListResponse, TextUpdate, TextPageResponse
@@ -12,12 +12,34 @@ from app.database.connection import get_db
 
 router = APIRouter(prefix="/texts", tags=["texts"])
 
-@router.post("/", response_model=TextResponse, status_code=201)
-def create_text_endpoint(
-        text: TextImport = Depends(TextImport.as_form),
-        image: UploadFile | None = File(None),
-        db: Session = Depends(get_db)
+@router.post("", response_model=TextResponse, status_code=201)
+async def create_text_endpoint(
+    request: Request,
+    db: Session = Depends(get_db)
 ):
+    try:
+        # max size = 10MB
+        form = await request.form(max_part_size=10 * 1024 * 1024)
+    except Exception as e:
+        raise HTTPException(status_code=413, detail=str(e))
+
+    # Form fields
+    title = form.get("title")
+    author = form.get("author")
+    content = form.get("content")
+    language_id = form.get("language_id")
+    user_id = form.get("user_id")
+
+    image: UploadFile | None = form.get("image")
+
+    text = TextImport(
+        title=title,
+        author=author,
+        content=content,
+        language_id=int(language_id),
+        user_id=int(user_id)
+    )
+
     return import_text(db, text, image)
 
 @router.get("/{text_id}")

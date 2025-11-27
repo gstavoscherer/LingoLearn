@@ -20,4 +20,8 @@ class WordRepository(BaseRepository[Word]):
         self.db.add_all(words_objects)
         self.db.flush()
         return words_objects
+    def get_word_by_id(self, word_id: int):
+        # Busca a palavra pelo word_id
+        word = self.db.query(Word).filter(Word.id == word_id).first()
+        return word
 

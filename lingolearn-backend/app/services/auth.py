@@ -38,7 +38,7 @@ def authenticate_user(db: Session, email: EmailStr, password: str) -> Token:
     access_token = create_access_token(token_data)
     if not access_token:
         raise AuthenticationError(email)
-
+    
     token = {
         "access_token": access_token,
         "token_type": "bearer"

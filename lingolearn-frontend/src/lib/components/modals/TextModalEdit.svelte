@@ -147,7 +147,7 @@
 			});
 
 			if (!response.ok) {
-				throw new Error('Erro ao atualizar texto');
+				toastState.add('Erro', 'Não foi possível atualizar o texto', 'error');
 			}
 
 			toastState.add('Sucesso!', 'Texto atualizado com sucesso.', 'success');

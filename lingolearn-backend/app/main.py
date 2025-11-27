@@ -1,10 +1,12 @@
 from fastapi import FastAPI, Request, HTTPException
-import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.middleware.trustedhost import TrustedHostMiddleware
+
+import uvicorn
+
 from starlette.staticfiles import StaticFiles
 from starlette.middleware.base import BaseHTTPMiddleware
-from app.routers import auth, users, texts, languages, user_words, pages,words, text_words, translate, dashboard
+
+from app.routers import auth, quiz, users, texts, languages, user_words, pages,words, text_words, translate, dashboard
 from app.database.connection import engine, Base
 from app.core.exceptions import AppError
 
@@ -61,6 +63,7 @@ app.include_router(text_words.router)
 app.include_router(user_words.router)
 app.include_router(translate.router)
 app.include_router(dashboard.router)
+app.include_router(quiz.router)
 
 @app.get("/")
 def home():
@@ -71,5 +74,5 @@ if __name__ == "__main__":
         "app.main:app",
         host="localhost",
         port=5000,
-        reload=True
+        reload=True,
     )

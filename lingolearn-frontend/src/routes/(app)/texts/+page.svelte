@@ -135,7 +135,6 @@
 {#snippet header()}
 	<div class="header-title">
 		<h1>Minha Biblioteca</h1>
-		<!-- Contador dinâmico baseado nos dados -->
 	</div>
 	<Button size="small" onclick={() => (isShowTextModal = true)}>
 		<Upload size={20} />

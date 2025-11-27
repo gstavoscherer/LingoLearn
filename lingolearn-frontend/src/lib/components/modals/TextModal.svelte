@@ -49,6 +49,8 @@
 
 	let languageOptions: SelectOptions[] | undefined = $state();
 
+	let isLoading = $state(false);
+
 	onMount(async () => {
 		const languagesRequest = await fetch(`${import.meta.env.VITE_API_URL}/languages/`);
 		const languages: LanguageType[] = await languagesRequest.json();
@@ -118,7 +120,10 @@
 
 	// modal
 	function handleOnClose(event: MouseEvent) {
-		if (event.target === event.currentTarget) onClose();
+		if (event.target === event.currentTarget) {
+			resetForm();
+			onClose();	
+		} 
 	}
 	function handleOnKeydown(event: KeyboardEvent) {
 		if (event.key === 'Escape') onClose();
@@ -126,6 +131,8 @@
 
 	// save
 	async function handleSave() {
+		isLoading = true;
+
 		const BASE_URL = import.meta.env.VITE_API_URL;
 		const form = new FormData();
 		form.append('title', bookForm.title || '');
@@ -150,16 +157,25 @@
 				`Por favor preencha os seguintes campos: ${missingFields.join(', ')}`,
 				'error'
 			);
+			isLoading = false;
+			return;
+		}
+		
+		const res = await fetch(`${BASE_URL}/texts`, { method: 'POST', body: form });
+
+		if (!res.ok) {
+			toastState.add('Erro', 'Ocorreu um erro ao salvar o texto.', 'error');
+			isLoading = false;
 			return;
 		}
 
-		await fetch(`${BASE_URL}/texts`, { method: 'POST', body: form });
-
+		isLoading = false;
 		toastState.add('Sucesso!', 'Seu texto foi salvo com sucesso.', 'success');
 		resetForm();
 		onClose();
 		onSave();
 	}
+
 
 	$effect(() => () => {
 		if (coverPreview) URL.revokeObjectURL(coverPreview);
@@ -337,7 +353,7 @@
 
 			<div class="modal-footer">
 				<Button onclick={onClose} variant="outline" size="small">Fechar</Button>
-				<Button size="small" onclick={handleSave}><BookOpen /> Adicionar</Button>
+				<Button size="small" onclick={handleSave} disabled={isLoading}><BookOpen /> Adicionar</Button>
 			</div>
 		</div>
 	</div>

@@ -39,8 +39,10 @@
 				<TrendingUp size={28} />
 			</div>
 			<div class="card-label">Sequência atual</div>
-			<div class="card-data">{dashboardData.streak} {dashboardData.streak == 1 ? 'Dia' : 'Dias'}</div>
-			
+			<div class="card-data">
+				{dashboardData.streak}
+				{dashboardData.streak == 1 ? 'Dia' : 'Dias'}
+			</div>
 		</div>
 		<div class="card">
 			<div class="icon">
@@ -84,18 +86,22 @@
 				<div class="quiz-icon">
 					<Brain size={32} />
 				</div>
+
 				<p class="quiz-card-title">Quiz de revisão</p>
-				<p class="quiz-card-primary-review">32</p>
-				<p class="quiz-card-secondary">Palavras para revisar</p>
-				<div class="button">
-                    <Button
-                                        class="button"
-                        variant="primary"
-                        size="fullWidth"
-                    >
-                        Começar Quiz
-                    </Button>
-                </div>
+
+				{#if dashboardData.wordsToReview > 0}
+					<p class="quiz-card-primary-review">
+						{dashboardData.wordsToReview}
+					</p>
+					<p class="quiz-card-secondary">Palavras para revisar</p>
+					<div class="button">
+						<Button class="button" variant="primary" size="fullWidth" onclick={() => goto('/quizzes')}>
+							Começar Quiz
+						</Button>
+					</div>
+				{:else}
+					<p class="quiz-card-primary-no-review">Nenhuma palavra para revisar!</p>
+				{/if}
 			</div>
 		</div>
 	</section>
@@ -107,7 +113,7 @@
 		flex-direction: column;
 		gap: 2rem;
 		height: 100%;
-        padding: 0 1rem;
+		padding: 0 1rem;
 	}
 
 	header {
@@ -276,13 +282,20 @@
 		line-height: 1.2rem;
 	}
 
+	.quiz-card-primary-no-review {
+		font-size: 18px;
+		font-weight: 700;
+		line-height: 1.2rem;
+		margin-top: 3rem;
+	}
+
 	.quiz-card-secondary {
 		font-size: 16px;
 		color: var(--text-secondary);
 	}
 
-    .quiz-card .button {
-        width: 100%;
-        margin-top: auto;
-    }
+	.quiz-card .button {
+		width: 100%;
+		margin-top: auto;
+	}
 </style>

@@ -18,14 +18,14 @@ class TextImport(BaseModel):
         author: str = Form(...),
         content: str = Form(...),
         language_id: str = Form(...),
-        user_id: int = Form(...)
+        user_id: str = Form(...)
     ):
         return cls(
             title=title,
             author=author,
             content=content,
-            language_id=language_id,
-            user_id=user_id
+            language_id=int(language_id),
+            user_id=int(user_id)
         )
 
 

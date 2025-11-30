@@ -1,16 +1,18 @@
+import os
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-
 import uvicorn
-
 from starlette.staticfiles import StaticFiles
 from starlette.middleware.base import BaseHTTPMiddleware
-
-from app.routers import auth, quiz, users, texts, languages, user_words, pages,words, text_words, translate, dashboard
+from app.routers import auth, quiz, users, texts, languages, user_words, pages, words, text_words, translate, dashboard
 from app.database.connection import engine, Base
 from app.core.exceptions import AppError
 
+
 Base.metadata.create_all(bind=engine)
+
+UPLOAD_DIR = "uploads/text_covers"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 app = FastAPI()
 
@@ -44,7 +46,7 @@ async def app_exception_handler(request: Request, exc: AppError):
             }
         }
     )
-app.mount("/uploads/text_covers", StaticFiles(directory="uploads/text_covers"), name="uploads")
+app.mount("/uploads/text_covers", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
